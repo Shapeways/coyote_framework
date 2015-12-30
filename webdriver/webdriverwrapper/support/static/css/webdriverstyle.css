@@ -1,0 +1,40 @@
+
+/* Messages */
+.webdriver-test-error-message {
+    top: 5px;
+    left: 5px;
+    margin: 20px;
+    padding: 20px;
+    color: orangered;
+    font-size: 20px;
+    line-height: 30px;
+    font-family: Arial;
+    font-weight: bold;
+    position: fixed;
+    z-index: 2147483647;
+}
+
+.webdriver-test-info-message {
+    /* Text */
+    color: darkblue;
+    font-size: 20px;
+    line-height: 30px;
+    font-family: Arial;
+    font-weight: bold;
+}
+
+.webdriver-paused {
+    /* Center the message */
+    top: 0;
+    position: fixed;
+    width: 30%;
+    left: 50%;
+    margin: 0 0 0 -15%;
+
+    /* Styling */
+    border: 1px dotted darkblue;
+    padding: 20px;
+    background-color: rgba(255,255,255,0.9);
+    margin-top: 40px;
+    border-radius: 5px;
+}
