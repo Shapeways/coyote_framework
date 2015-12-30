@@ -17,11 +17,10 @@ from selenium.webdriver.support.ui import WebDriverWait
 from coyote_framework.webdriver.webdriverwrapper import WebElementWrapper
 from coyote_framework.webdriver.webdriverwrapper.exceptions import WebDriverWrapperException, WebDriverTimeoutException, \
     PageTimeoutException
-from coyote_framework.webdriver.webdriverwrapper.support import LocatorHandler as LH
+from coyote_framework.webdriver.webdriverwrapper.support import LocatorHandler as LH, staticreader
 from coyote_framework.webdriver.webdriverwrapper.support.locator import Locator
 from coyote_framework.webdriver.webdriverwrapper.support import WebDriverWrapperAssertion as Assertion
 from coyote_framework.webdriver.webdriverwrapper.support import JavascriptExecutor as JE
-from support import staticreader
 
 
 BROWSER_LOG_LEVEL_INFO = u'INFO'
