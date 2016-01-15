@@ -6,7 +6,7 @@ import os
 __author__ = 'justin@shapeways.com'
 
 
-TEST_RUN_CONFIG = 'TEST_RUN_SETTING_CONFIG'
+TEST_RUN_SETTING_CONFIG = 'TEST_RUN_SETTING_CONFIG'
 confg_dict = {}
 
 
@@ -78,8 +78,8 @@ class ConfigBase(object):
 
         # Third priority -- read the environment variable overrides
         override_filenames = []
-        if TEST_RUN_CONFIG in os.environ:
-            for test_config in os.environ[TEST_RUN_CONFIG].split(','):
+        if TEST_RUN_SETTING_CONFIG in os.environ:
+            for test_config in os.environ[TEST_RUN_SETTING_CONFIG].split(','):
                 override_filenames.append(test_config)
 
         all_configs = config_defaults + [user_config] + override_filenames
