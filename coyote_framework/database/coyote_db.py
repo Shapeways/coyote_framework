@@ -10,6 +10,7 @@ from dateutil import parser
 from coyote_framework.mixins.stringconversion import get_delimited_string_from_list
 from ConfigParser import NoOptionError
 
+
 class NoRecordsFoundException(ValueError):
     """Exception raised when no records found when expecting at least one"""
 
@@ -71,6 +72,15 @@ class CoyoteDb(object):
 
     @staticmethod
     def __add_query_comment(sql):
+        """
+        Adds a comment line to the query to be executed containing the line number of the calling
+        function.  This is useful for debugging slow queries, as the comment will show in the slow
+        query log
+
+        @type sql: str
+        @param sql: sql needing comment
+        @return:
+        """
         # Inspect the call stack for the originating call
         file_name = ''
         line_number = ''
