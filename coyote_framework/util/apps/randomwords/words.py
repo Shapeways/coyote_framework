@@ -1,5 +1,5 @@
 """
-
+Used for random string generation
 """
 
 import random
