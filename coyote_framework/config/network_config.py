@@ -1,5 +1,4 @@
-from config.abstract_config import ConfigBase
-
+from coyote_framework.config.abstract_config import ConfigBase
 
 class NetworkConfig(ConfigBase):
 
