@@ -107,7 +107,3 @@ class CoyoteTest(unittest.TestCase):
         log('----------------------------- TearDown -----------------------------')
         self.check_for_and_set_current_result()
         log('TEST PASSED' if self.is_passed else 'TEST FAILURE')
-        # if self.test_params.requires_cross_browser and hasattr(config, 'run_cross_browser'):
-        #     sauce = seleniumprovider.SauceConnection(username=config.saucelabs_username,
-        #                                              key=config.saucelabs_key)
-        #     sauce.set_job_details(self.driver_session_id, passed=self.is_passed)

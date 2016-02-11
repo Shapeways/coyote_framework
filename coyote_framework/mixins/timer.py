@@ -1,5 +1,4 @@
 from coyote_framework import log
-from coyote_framework.log.monitor import track_metric
 
 __author__ = 'justin'
 
@@ -22,9 +21,6 @@ class time_this_function:
 
             elapsed = round(te - ts, 4)
             message = 'Function "{}" elapsed time: {} seconds'.format(fn.__name__, elapsed)
-
-            if self.key:
-                track_metric(metric='aft.timing', value=elapsed, tags=[self.key])
 
             if self.logger is not None:
                 print message
