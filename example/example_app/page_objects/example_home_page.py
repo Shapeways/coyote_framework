@@ -14,7 +14,11 @@ class ExampleHomePage(ExamplePage):
 
     class locators(ExamplePage.locators):
         hello_world = Locator('css', '.hello-world', 'hello world title')
-        first_name_input = Locator('css', '.')
+        follow_me_link = Locator('css', '.follow', 'follow me link')
+        unhide_button = Locator('css', '#unhide', 'unhide button')
+        hidden_div = Locator('css', '.hidden-div', 'hidden div')
+        display_firstname = Locator('css', '.display-firstname', 'first name display')
+        display_lastname = Locator('css', '.display-lastname', 'last name display')
 
     def __init__(self, driver_wrapper, logger=None):
         super(ExampleHomePage, self).__init__(driver_wrapper=driver_wrapper, logger=logger)
@@ -23,7 +27,7 @@ class ExampleHomePage(ExamplePage):
         """Test that Home page is loaded"""
         return self.dw.is_present(self.locators.hello_world)
 
-    def get_signup_form_component(self):
+    def get_login_form_component(self):
         """Initializes and returns the login form component
 
         @rtype: LoginForm
@@ -41,11 +45,20 @@ class ExampleHomePage(ExamplePage):
         )
         return self.login_form
 
-    def click_see_me_button(self):
-        pass
+    def get_hello_world_text(self):
+        return self.dw.find(self.locators.hello_world).text()
 
-    def verify_we_can_see_text(self):
-        pass
+    def click_see_me_button(self):
+        self.dw.find(self.locators.unhide_button).click()
 
     def click_follow_me(self):
-        pass
+        self.dw.find(self.locators.follow_me_link).click()
+
+    def confirm_text_visible(self, timeout=30):
+        self.dw.wait_until_visibility_of(self.locators.hidden_div, timeout=timeout)
+
+    def get_first_name_display(self):
+        return self.dw.find(self.locators.display_firstname).text()
+
+    def get_last_name_display(self):
+        return self.dw.find(self.locators.display_lastname).text()
