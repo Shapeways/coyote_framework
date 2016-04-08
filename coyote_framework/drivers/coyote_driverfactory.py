@@ -11,9 +11,9 @@ from selenium.webdriver.firefox.firefox_binary import FirefoxBinary
 from selenium.common.exceptions import WebDriverException
 from selenium.webdriver import DesiredCapabilities
 from pyvirtualdisplay import Display
+from coyote_framework.config.constants_config import ConstantsConfig
 from coyote_framework.log.Logger import log
 
-import const
 from coyote_framework.config.browser_config import BrowserConfig
 from coyote_framework.util.apps.randomwords import words
 from coyote_framework.mixins.filesystem import create_directory
@@ -31,12 +31,14 @@ __author__ = 'justin@shapeways.com'
 
 def get_firefox_profile():
     # TODO: update this so that it is not browser-specific
-    profile_directory = os.path.join(const.WEBDRIVER_DIR, 'firefox', 'profile', 'tmp')
+    constants_config = ConstantsConfig()
+    profile_directory = os.path.join(constants_config.get('webdriver_dir'), 'firefox', 'profile', 'tmp')
     create_directory(profile_directory)
+
 
     ffprofile = webdriver.FirefoxProfile(profile_directory)
 
-    log_dir = os.path.join(const.LOGS_DIR, 'webdriver')
+    log_dir = os.path.join(constants_config.get('logs_dir'), 'webdriver')
     create_directory(log_dir)
 
     log_path = os.path.join(log_dir, '{}_{}.log'.format(datetime.datetime.now().isoformat('_'), words.random_word()))
@@ -53,8 +55,8 @@ def get_firefox_binary():
     @rtype: FirefoxBinary
     """
     browser_config = BrowserConfig()
-
-    log_dir = os.path.join(const.LOGS_DIR, 'firefox')
+    constants_config = ConstantsConfig()
+    log_dir = os.path.join(constants_config.get('logs_dir'), 'firefox')
     create_directory(log_dir)
 
     log_path = os.path.join(log_dir, '{}_{}.log'.format(datetime.datetime.now().isoformat('_'), words.random_word()))
