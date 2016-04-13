@@ -14,5 +14,6 @@ and locators to instrument a page, in this case http://shapeways.github.io.  The
 to use the configuration infrastructure, which uses pythons ConfigParser.  The example tests directory are tests
 you would write to test your application.  An important note: you need to provide the test framework with the 
 location of the example.cfg file via the TEST_RUN_SETTING_HOST environment variable.  Simply point it to the 
-absolute path of your config file, and you're off to the races!  
+absolute path of your config file as shown below, and you're off to the races!  
+
 `TEST_RUN_SETTING_CONFG=/path/to/coyote_framework/example/example_app/config/example.cfg`
