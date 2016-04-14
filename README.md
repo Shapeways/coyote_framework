@@ -21,6 +21,7 @@ absolute path of your config file as shown below, and you're off to the races!
 ##To run the example:
 
 Install Firefox 31 From https://ftp.mozilla.org/pub/firefox/releases/31.8.0esr/ to `/usr/bin/firefox`
+
 Install nose `pip install nose`
 
 ```
