@@ -5,7 +5,6 @@ import socket
 import time
 import urllib2
 
-from mozilla_installer import installer
 from selenium import webdriver
 from selenium.webdriver.firefox.firefox_binary import FirefoxBinary
 from selenium.common.exceptions import WebDriverException
@@ -63,25 +62,7 @@ def get_firefox_binary():
     log_file = open(log_path, 'w')
     log('Firefox log file: {}'.format(log_path))
 
-    if not browser_config.getbool('use_installed_firefox'):
-        inst = installer.FirefoxInstaller(
-            browser_config.get('firefox_install_path'),
-            browser_config.get('firefox_version'),
-            browser_config.get('firefox_os'),
-            browser_config.get('firefox_language'),
-        )
-
-        bin_dir = inst.get_installed_path()
-
-        # Get the firefox bin
-        if 'mac' in browser_config.get('firefox_os'):
-            bin_dir = os.path.join(bin_dir, 'Contents', 'MacOS', 'firefox-bin')
-        elif 'linux' in browser_config.get('firefox_os'):
-            bin_dir = os.path.join(bin_dir, 'firefox-bin')
-
-        binary = FirefoxBinary(firefox_path=bin_dir, log_file=log_file)
-    else:
-        binary = FirefoxBinary(log_file=log_file)
+    binary = FirefoxBinary(log_file=log_file)
 
     return binary
 
@@ -126,21 +107,6 @@ def new_driver():
         browser_name = driverfactory.REMOTE
     else:
         # Make sure correct Firefox version is installed
-        browserconfig = BrowserConfig()
-        if not browserconfig.getbool('use_installed_firefox'):
-            ff = installer.FirefoxInstaller(
-                browserconfig.get('firefox_install_path'),
-                version=browserconfig.get('firefox_version'),
-                operating_system=browserconfig.get('firefox_os'),
-                extension=browserconfig.get('firefox_extension'),
-                language=browserconfig.get('firefox_language')
-            )
-            polling.poll(
-                lambda: ff.install(respect_existing=True),
-                timeout=900,  # 15 minutes
-                ignore_exceptions=(installer.LockExistsException,)
-            )
-
         binary = get_firefox_binary()
 
         kwargs.update({
