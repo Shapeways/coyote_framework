@@ -17,3 +17,13 @@ location of the example.cfg file via the TEST_RUN_SETTING_HOST environment varia
 absolute path of your config file as shown below, and you're off to the races!  
 
 `TEST_RUN_SETTING_CONFG=/path/to/coyote_framework/example/example_app/config/example.cfg`
+
+##To run the example:
+
+Install Firefox 31 From https://ftp.mozilla.org/pub/firefox/releases/31.8.0esr/ to `/usr/bin/firefox`
+Install nose `pip install nose`
+
+```
+cd example
+TEST_RUN_SETTING_CONFIG=example_app/config/example.cfg python -m nose
+```
