@@ -52,7 +52,7 @@ def get():
 
     else:
         todays_date = str(datetime.date.today())
-        logs_dir = create_directory(os.path.join(os.path.dirname(__file__), '../logs/' + todays_date))
+        logs_dir = create_directory('/tmp/coyote_framework/logs/' + todays_date)
         logs_file = logs_dir + '/' + todays_date + '.log'
         logging.basicConfig(format=FORMAT, datefmt=DATE_FORMAT, filename=logs_file, filemode='w')
 
