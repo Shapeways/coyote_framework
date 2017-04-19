@@ -80,7 +80,9 @@ class ConfigBase(object):
         override_filenames = []
         if TEST_RUN_SETTING_CONFIG in os.environ:
             for test_config in os.environ[TEST_RUN_SETTING_CONFIG].split(','):
-                override_filenames.append(test_config)
+                test_config = test_config.split('.')
+                filename = os.path.join(config_path, test_config[0], test_config[-1] + '.cfg')
+                override_filenames.append(filename)
 
         all_configs = config_defaults + [user_config] + override_filenames
         return self.parser.read(all_configs)
