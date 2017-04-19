@@ -66,6 +66,8 @@ class ConfigBase(object):
 
                     `<project_root>/config/browser/headless.cfg`
                     `<project_root>/config/scripts/no_ssh.cfg`
+
+                OR a config string such as "<project_root>/config/browser/headless.cfg" will load that path directly
         """
         # First priority -- read all default configs
         config_path = os.path.dirname(__file__)
@@ -80,9 +82,15 @@ class ConfigBase(object):
         override_filenames = []
         if TEST_RUN_SETTING_CONFIG in os.environ:
             for test_config in os.environ[TEST_RUN_SETTING_CONFIG].split(','):
-                test_config = test_config.split('.')
-                filename = os.path.join(config_path, test_config[0], test_config[-1] + '.cfg')
-                override_filenames.append(filename)
+                if os.path.exists(test_config):             #is this a file path
+                   override_filenames.append(test_config)
+                elif "." in test_config:                    #else it might be in xxxx.yyyy format
+                    config_parts = test_config.split('.')
+                    filename = os.path.join(config_path, *config_parts[0:-1], config_parts[-1] + '.cfg')
+                    override_filenames.append(filename)
+                else:                                       #else unknown, might throw exception here
+                    pass
+
 
         all_configs = config_defaults + [user_config] + override_filenames
         return self.parser.read(all_configs)
