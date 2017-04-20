@@ -84,9 +84,10 @@ class ConfigBase(object):
             for test_config in os.environ[TEST_RUN_SETTING_CONFIG].split(','):
                 if os.path.exists(test_config):             #is this a file path
                    override_filenames.append(test_config)
-                elif "." in test_config:                    #else it might be in xxxx.yyyy format
+                elif "." in test_config and not test_config.endswith('.cfg'):                    #else it might be in xxxx.yyyy format
                     config_parts = test_config.split('.')
-                    filename = os.path.join(config_path, *config_parts[0:-1], config_parts[-1] + '.cfg')
+                    config_parts[-1]+='.cfg' #add file ext to last part, which should be file
+                    filename = os.path.join(config_path, *config_parts)
                     override_filenames.append(filename)
                 else:                                       #else unknown, might throw exception here
                     pass
