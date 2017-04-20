@@ -5,7 +5,7 @@ from setuptools import setup, find_packages
 
 setup(
     name='coyote-framework',
-    version='0.1.2',
+    version='0.1.3',
     author='Shapeways',
     author_email='api@shapeways.com',
     packages=find_packages(),
