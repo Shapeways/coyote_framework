@@ -31,7 +31,7 @@ class RequestDriver(object):
             self.session = requests
 
     def request(self, uri, method=GET, headers=None, cookies=None, params=None, data=None, post_files=None,**kwargs):
-        """Makes a request
+        """Makes a request using requests
 
         @param uri: The uri to send request
         @param method: Method to use to send request
