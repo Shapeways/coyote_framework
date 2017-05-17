@@ -2,12 +2,13 @@ from ConfigParser import ConfigParser
 import json
 import fnmatch
 import os
+import sys
 
 __author__ = 'justin@shapeways.com'
 
 
 TEST_RUN_SETTING_CONFIG = 'TEST_RUN_SETTING_CONFIG'
-confg_dict = {}
+config_dict = {}
 
 
 class NullConfigAttribute(object):
@@ -20,16 +21,38 @@ class NullConfigAttribute(object):
 class ConfigBase(object):
     """The config base; do not inherit from ConfigParser because it is an old-style class"""
 
-    def __init__(self, section):
-        if section not in confg_dict.keys():
-            self.section = section
+
+    def __new__(cls,section=None):
+        '''
+        Checks config_dict for pre-existence of instance for same section
+        @param section: config section to check for existence, also checks cls.section if it exists
+        @return: new or old instance of configbase or subclass
+        '''
+
+        inst_section = section if section else cls.section if hasattr(cls,'section') else None
+        if inst_section in config_dict.keys():
+            return config_dict[inst_section]
+        else:
+            return super(ConfigBase, cls).__new__(cls)
+
+    def __init__(self, section=None):
+        '''
+        Sets up instance and will store it in config_dict if not there already
+        For compatibility reasons, will also copy some attributes from config_dict
+        @param section: section for this config. Deprecated (probably)
+        @return:
+        '''
+        inst_section = section if section else self.section if hasattr(self,'section') else None
+        if inst_section not in config_dict.keys():
+            self.inherited_config_path = os.path.dirname(sys.modules[self.__class__.__module__].__file__) #TODO: works for subclasses, but not for other calls to coyote_framework lib
+            self.section = inst_section
             self.parser = ConfigParser()
             self._readall()
-            confg_dict[section] = self
+            config_dict[inst_section] = self
         else:
-            this_config = confg_dict[section]
-            self.section = section
-            self.parser = this_config.parser
+            self.section = inst_section
+            self.parser = config_dict[inst_section].parser
+            self.inherited_config_path = config_dict[inst_section].inherited_config_path
 
     def get(self, key):
         return self.parser.get(self.section, key)
@@ -87,7 +110,7 @@ class ConfigBase(object):
                 elif "." in test_config and not test_config.endswith('.cfg'):                    #else it might be in xxxx.yyyy format
                     config_parts = test_config.split('.')
                     config_parts[-1]+='.cfg' #add file ext to last part, which should be file
-                    filename = os.path.join(config_path, *config_parts)
+                    filename = os.path.join(self.inherited_config_path, *config_parts) #TODO: works for subclasses but not other access from coyote_framework
                     override_filenames.append(filename)
                 else:                                       #else unknown, might throw exception here
                     pass
