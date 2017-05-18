@@ -30,8 +30,8 @@ class RequestDriver(object):
         else:
             self.session = requests
 
-    def request(self, uri, method=GET, headers=None, cookies=None, params=None, data=None, post_files=None):
-        """Makes a request
+    def request(self, uri, method=GET, headers=None, cookies=None, params=None, data=None, post_files=None,**kwargs):
+        """Makes a request using requests
 
         @param uri: The uri to send request
         @param method: Method to use to send request
@@ -39,11 +39,12 @@ class RequestDriver(object):
         @param cookies: Request cookies (in addition to session cookies)
         @param params: Request parameters
         @param data: Request data
+        @param kwargs: other options to pass to underlying request
         @rtype: requests.Response
         @return: The response
         """
 
-        kwargs = {
+        coyote_args = {
             'headers': headers,
             'cookies': cookies,
             'params': params,
@@ -53,17 +54,19 @@ class RequestDriver(object):
 
         }
 
+        coyote_args.update(kwargs)
+
         if method == self.POST:
-            response = self.session.post(uri, **kwargs)
+            response = self.session.post(uri, **coyote_args)
 
         elif method == self.PUT:
-            response = self.session.put(uri, **kwargs)
+            response = self.session.put(uri, **coyote_args)
 
         elif method == self.DELETE:
-            response = self.session.delete(uri, **kwargs)
+            response = self.session.delete(uri, **coyote_args)
 
         else:  # Default to GET
-            response = self.session.get(uri, **kwargs)
+            response = self.session.get(uri, **coyote_args)
 
         self.responses.append(response)
 
