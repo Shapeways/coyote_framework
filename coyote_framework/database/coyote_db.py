@@ -126,7 +126,7 @@ class CoyoteDb(object):
         return instance
 
     @staticmethod
-    def get_all_instances(sql, target_database=None, class_type, *args, **kwargs):
+    def get_all_instances(sql, class_type, target_database=None, *args, **kwargs):
         """Returns a list of instances of class_type populated with attributes from the DB record
 
         @param sql: Sql statement to execute
