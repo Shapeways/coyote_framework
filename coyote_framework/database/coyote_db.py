@@ -32,13 +32,13 @@ class NOTSET(object):
 class CoyoteDb(object):
 
     @staticmethod
-    def __get_db_cursor():
-        db = CoyoteDb.__get_db_write_instance()
+    def __get_db_cursor(target_database=None):
+        db = CoyoteDb.__get_db_write_instance(target_database=target_database)
         return db.cursor()
 
     @staticmethod
-    def __get_db_write_instance():
-        db_config = DatabaseConfig()
+    def __get_db_write_instance(target_database=None):
+        db_config = DatabaseConfig(target_database)
         db_type = db_config.get('database_type')
         if db_type == 'mysql':
             db_host = db_config.get('mysql_host')
@@ -96,17 +96,17 @@ class CoyoteDb(object):
 
 
     @staticmethod
-    def get_single_record(*args, **kwargs):
-        db, cursor = CoyoteDb.execute(*args, **kwargs)
+    def get_single_record(target_database=None, *args, **kwargs):
+        db, cursor = CoyoteDb.execute(target_database=None, *args, **kwargs)
         return cursor.fetchone()
 
     @staticmethod
-    def get_all_records(*args, **kwargs):
-        db, cursor = CoyoteDb.execute(*args, **kwargs)
+    def get_all_records(target_database=None,*args, **kwargs):
+        db, cursor = CoyoteDb.execute(target_database=None, *args, **kwargs)
         return cursor.fetchall()
 
     @staticmethod
-    def get_single_instance(sql, class_type, *args, **kwargs):
+    def get_single_instance(sql, class_type,target_database=None, *args, **kwargs):
         """Returns an instance of class_type populated with attributes from the DB record; throws an error if no
         records are found
 
@@ -114,7 +114,7 @@ class CoyoteDb(object):
         @param class_type: The type of class to instantiate and populate with DB record
         @return: Return an instance with attributes set to values from DB
         """
-        record = CoyoteDb.get_single_record(sql, *args, **kwargs)
+        record = CoyoteDb.get_single_record(sql, target_database=None, *args, **kwargs)
         try:
             instance = CoyoteDb.get_object_from_dictionary_representation(dictionary=record, class_type=class_type)
         except AttributeError:
@@ -126,14 +126,14 @@ class CoyoteDb(object):
         return instance
 
     @staticmethod
-    def get_all_instances(sql, class_type, *args, **kwargs):
+    def get_all_instances(sql, target_database=None, class_type, *args, **kwargs):
         """Returns a list of instances of class_type populated with attributes from the DB record
 
         @param sql: Sql statement to execute
         @param class_type: The type of class to instantiate and populate with DB record
         @return: Return a list of instances with attributes set to values from DB
         """
-        records = CoyoteDb.get_all_records(sql, *args, **kwargs)
+        records = CoyoteDb.get_all_records(sql, target_database=None, *args, **kwargs)
         instances = [CoyoteDb.get_object_from_dictionary_representation(
             dictionary=record, class_type=class_type) for record in records]
         for instance in instances:
@@ -273,7 +273,7 @@ class CoyoteDb(object):
         return where_clause
 
     @staticmethod
-    def execute(*args, **kwargs):
+    def execute(target_database=None, *args, **kwargs):
         """Executes the sql statement, but does not commit. Returns the cursor to commit
 
         @return: DB and cursor instance following sql execution
@@ -281,7 +281,7 @@ class CoyoteDb(object):
 
         # Inspect the call stack for the originating call
         args = CoyoteDb.__add_query_comment(args[0])
-        db = CoyoteDb.__get_db_write_instance()
+        db = CoyoteDb.__get_db_write_instance(target_database=target_database)
 
         # Execute the query
         cursor = db.cursor()
@@ -312,17 +312,17 @@ class CoyoteDb(object):
         return db, cursor
 
     @staticmethod
-    def execute_and_commit(*args, **kwargs):
+    def execute_and_commit(target_database=None,*args, **kwargs):
         """Executes and commits the sql statement
 
         @return: None
         """
-        db, cursor = CoyoteDb.execute(*args, **kwargs)
+        db, cursor = CoyoteDb.execute(target_database=None,*args, **kwargs)
         db.commit()
         return cursor
 
     @staticmethod
-    def insert(sql, *args, **kwargs):
+    def insert(sql, target_database=None, *args, **kwargs):
         """Inserts and commits with an insert sql statement, returns the record, but with a small chance of a race
         condition
 
@@ -331,7 +331,7 @@ class CoyoteDb(object):
         """
 
         assert "insert into" in sql.lower(), 'This function requires an insert statement, provided: {}'.format(sql)
-        cursor = CoyoteDb.execute_and_commit(sql, *args, **kwargs)
+        cursor = CoyoteDb.execute_and_commit(sql, target_database=None, *args, **kwargs)
 
         # now get that id
         last_row_id = cursor.lastrowid
@@ -339,7 +339,7 @@ class CoyoteDb(object):
         return last_row_id
 
     @staticmethod
-    def insert_instance(instance, table):
+    def insert_instance(instance, table, target_database=None,):
         """Inserts an object's values into a given table, will not populate Nonetype values
 
         @param instance: Instance of an object to insert
@@ -361,11 +361,11 @@ class CoyoteDb(object):
             values=values
         )
 
-        insert = CoyoteDb.insert(sql=sql)
+        insert = CoyoteDb.insert(sql=sql, target_database=None,)
         return insert
 
     @staticmethod
-    def update(sql, *args, **kwargs):
+    def update(sql, target_database=None, *args, **kwargs):
         """Updates and commits with an insert sql statement, returns the record, but with a small chance of a race
         condition
 
@@ -373,7 +373,7 @@ class CoyoteDb(object):
         @return: The last row inserted
         """
         assert "update" in sql.lower(), 'This function requires an update statement, provided: {}'.format(sql)
-        cursor = CoyoteDb.execute_and_commit(sql, *args, **kwargs)
+        cursor = CoyoteDb.execute_and_commit(sql, target_database=None, *args, **kwargs)
 
         # now get that id
         last_row_id = cursor.lastrowid
@@ -381,10 +381,10 @@ class CoyoteDb(object):
         return last_row_id
 
     @staticmethod
-    def delete(sql, *args, **kwargs):
+    def delete(sql, target_database=None, *args, **kwargs):
         """Deletes and commits with an insert sql statement"""
         assert "delete" in sql.lower(), 'This function requires a delete statement, provided: {}'.format(sql)
-        CoyoteDb.execute_and_commit(sql, *args, **kwargs)
+        CoyoteDb.execute_and_commit(sql, target_database=None, *args, **kwargs)
 
     @staticmethod
     def update_object_from_dictionary_representation(dictionary, instance):
@@ -445,5 +445,3 @@ class CoyoteDb(object):
         """
         string = MySQLdb.escape_string(string)
         return string
-
-
