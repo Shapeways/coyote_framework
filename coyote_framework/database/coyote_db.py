@@ -32,13 +32,13 @@ class NOTSET(object):
 class CoyoteDb(object):
 
     @staticmethod
-    def __get_db_cursor():
-        db = CoyoteDb.__get_db_write_instance()
+    def __get_db_cursor(target_database=None):
+        db = CoyoteDb.__get_db_write_instance(target_database=target_database)
         return db.cursor()
 
     @staticmethod
-    def __get_db_write_instance():
-        db_config = DatabaseConfig()
+    def __get_db_write_instance(target_database=None):
+        db_config = DatabaseConfig(target_database)
         db_type = db_config.get('database_type')
         if db_type == 'mysql':
             db_host = db_config.get('mysql_host')
@@ -281,12 +281,13 @@ class CoyoteDb(object):
 
         # Inspect the call stack for the originating call
         args = CoyoteDb.__add_query_comment(args[0])
-        db = CoyoteDb.__get_db_write_instance()
+        db = CoyoteDb.__get_db_write_instance(kwargs.pop('targe_database', None))
+        filtered_kwargs = {k: v for k, v in kwargs.iteritems() if k != 'target_database'}
 
         # Execute the query
         cursor = db.cursor()
         try:
-            cursor.execute(*args, **kwargs)
+            cursor.execute(*args, **filtered_kwargs)
         except OperationalError, e:
             raise OperationalError('{} when executing: {}'.format(e.args, args[0]))
         return db, cursor
@@ -445,5 +446,3 @@ class CoyoteDb(object):
         """
         string = MySQLdb.escape_string(string)
         return string
-
-
