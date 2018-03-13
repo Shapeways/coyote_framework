@@ -281,7 +281,7 @@ class CoyoteDb(object):
 
         # Inspect the call stack for the originating call
         args = CoyoteDb.__add_query_comment(args[0])
-        db = CoyoteDb.__get_db_write_instance(kwargs.pop('targe_database', None))
+        db = CoyoteDb.__get_db_write_instance(target_database=kwargs.pop('target_database', None))
         filtered_kwargs = {k: v for k, v in kwargs.iteritems() if k != 'target_database'}
 
         # Execute the query
