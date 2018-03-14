@@ -38,7 +38,7 @@ class CoyoteDb(object):
 
     @staticmethod
     def __get_db_write_instance(target_database=None):
-        db_config = DatabaseConfig(target_database)
+        db_config = DatabaseConfig(target_database=target_database)
         db_type = db_config.get('database_type')
         if db_type == 'mysql':
             db_host = db_config.get('mysql_host')
