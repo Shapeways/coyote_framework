@@ -340,7 +340,7 @@ class CoyoteDb(object):
         return last_row_id
 
     @staticmethod
-    def insert_instance(instance, table):
+    def insert_instance(instance, table, **kwargs):
         """Inserts an object's values into a given table, will not populate Nonetype values
 
         @param instance: Instance of an object to insert
@@ -362,7 +362,7 @@ class CoyoteDb(object):
             values=values
         )
 
-        insert = CoyoteDb.insert(sql=sql)
+        insert = CoyoteDb.insert(sql=sql, **kwargs)
         return insert
 
     @staticmethod
