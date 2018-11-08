@@ -12,6 +12,7 @@ class RequestDriver(object):
     GET = 'GET'
     POST = 'POST'
     PUT = 'PUT'
+    PATCH = 'PATCH'
     DELETE = 'DELETE'
 
     session = None
@@ -61,6 +62,9 @@ class RequestDriver(object):
 
         elif method == self.PUT:
             response = self.session.put(uri, **coyote_args)
+
+        elif method == self.PATCH:
+            response = self.session.patch(uri, **coyote_args)
 
         elif method == self.DELETE:
             response = self.session.delete(uri, **coyote_args)
